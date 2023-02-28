@@ -6,7 +6,7 @@ import LocInfo from "../components/LocInfo";
 import AnimatedLottieView from "lottie-react-native";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
 import { useWindowDimensions } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import Icon from "react-native-vector-icons/Ionicons";
 
 const RoomScreen = () => {
@@ -75,6 +75,7 @@ const RoomScreen = () => {
           </View>
           <MapView
             style={styles.map}
+            provider={PROVIDER_GOOGLE}
             initialRegion={{
               latitude: data.location[1],
               longitude: data.location[0],
@@ -108,6 +109,12 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     flex: 1,
+    backgroundColor: "white",
+  },
+  loadBox: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "white",
   },
   map: {

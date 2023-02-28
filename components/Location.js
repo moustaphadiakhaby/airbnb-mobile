@@ -1,9 +1,19 @@
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import LocInfo from "./LocInfo";
 
 const Location = ({ data }) => {
   const navigation = useNavigation();
+
+  console.log(data);
+
   return (
     <TouchableOpacity
       activeOpacity={1}

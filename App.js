@@ -18,6 +18,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   const setToken = async (token) => {
     if (token) {
@@ -27,6 +28,16 @@ export default function App() {
     }
 
     setUserToken(token);
+  };
+
+  const setId = async (id) => {
+    if (id) {
+      await AsyncStorage.setItem("userId", id);
+    } else {
+      await AsyncStorage.removeItem("userId");
+    }
+
+    setUserId(id);
   };
 
   useEffect(() => {
@@ -56,11 +67,39 @@ export default function App() {
         {userToken === null ? (
           // No token found, user isn't signed in
           <>
-            <Stack.Screen name="SignIn">
-              {() => <SignInScreen setToken={setToken} />}
+            <Stack.Screen
+              options={{
+                headerTitle: () => (
+                  <Image
+                    style={{
+                      height: 30,
+                      width: 30,
+                      resizeMode: "contain",
+                    }}
+                    source={require("./images/logo.png")}
+                  />
+                ),
+              }}
+              name="SignIn"
+            >
+              {() => <SignInScreen setToken={setToken} setId={setId} />}
             </Stack.Screen>
-            <Stack.Screen name="SignUp">
-              {() => <SignUpScreen setToken={setToken} />}
+            <Stack.Screen
+              options={{
+                headerTitle: () => (
+                  <Image
+                    style={{
+                      height: 30,
+                      width: 30,
+                      resizeMode: "contain",
+                    }}
+                    source={require("./images/logo.png")}
+                  />
+                ),
+              }}
+              name="SignUp"
+            >
+              {() => <SignUpScreen setToken={setToken} setUserId={setUserId} />}
             </Stack.Screen>
           </>
         ) : (
@@ -205,7 +244,9 @@ export default function App() {
                           ),
                         }}
                       >
-                        {() => <SettingsScreen setToken={setToken} />}
+                        {() => (
+                          <SettingsScreen setToken={setToken} setId={setId} />
+                        )}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}

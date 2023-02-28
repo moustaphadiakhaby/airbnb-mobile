@@ -1,4 +1,4 @@
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { useEffect, useState, useRef } from "react";
@@ -10,6 +10,7 @@ const MapScreen = () => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
+  const [coords, setCoords] = useState();
 
   const navigation = useNavigation();
 
@@ -18,22 +19,25 @@ const MapScreen = () => {
   useEffect(() => {
     try {
       const fetchData = async () => {
-        const response = await axios.get(
-          "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms/around"
-        );
-        setData(response.data);
-        setLoading(false);
-      };
-      const askPermission = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
 
         if (status !== "granted") {
           setError(true);
         } else {
-          fetchData();
+          let location = await Location.getCurrentPositionAsync({});
+          const obj = {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          };
+          const response = await axios.get(
+            `https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms/around?latitude=${location.coords.latitude}&longitude=${location.coords.longitude}`
+          );
+          setData(response.data);
+          setCoords(obj);
         }
+        setLoading(false);
       };
-      askPermission();
+      fetchData();
     } catch (error) {}
   }, []);
 
@@ -50,14 +54,15 @@ const MapScreen = () => {
     <Text style={styles.error}>Permission refusée</Text>
   ) : (
     <MapView
+      provider={PROVIDER_GOOGLE}
       style={styles.map}
       initialRegion={{
-        latitude: 48.866667,
-        longitude: 2.333333,
-        latitudeDelta: 0.17,
-        longitudeDelta: 0.17,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        latitudeDelta: 0.2,
+        longitudeDelta: 0.2,
       }}
-      showsUserLocation={true}
+      showsUserLocation
     >
       {data.map((item) => {
         return (

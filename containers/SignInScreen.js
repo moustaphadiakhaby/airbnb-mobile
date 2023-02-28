@@ -6,7 +6,7 @@ import { StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import AnimatedLottieView from "lottie-react-native";
 
-export default function SignInScreen({ setToken }) {
+export default function SignInScreen({ setToken, setId }) {
   const navigation = useNavigation();
   const animation = useRef(null);
 
@@ -31,6 +31,7 @@ export default function SignInScreen({ setToken }) {
 
         if (response.data.token) {
           setToken(response.data.token);
+          setId(response.data.id);
         }
         setIsLoading(false);
       } catch (error) {

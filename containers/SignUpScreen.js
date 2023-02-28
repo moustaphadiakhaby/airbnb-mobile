@@ -7,7 +7,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import AnimatedLottieView from "lottie-react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-export default function SignInScreen({ setToken }) {
+export default function SignInScreen({ setToken, setUserId }) {
   const navigation = useNavigation();
   const animation = useRef(null);
 
@@ -40,6 +40,7 @@ export default function SignInScreen({ setToken }) {
 
           if (response.data.token) {
             setToken(response.data.token);
+            setUserId(response.data.id);
           }
           setIsLoading(false);
         } catch (error) {
